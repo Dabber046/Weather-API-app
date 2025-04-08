@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Announcer Weather Forecast</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2rem;
+      background: #f0f4f8;
+      color: #333;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    input, button {
+      padding: 0.5rem;
+      font-size: 1rem;
+    }
+    #forecast {
+      margin-top: 2rem;
+      border-top: 1px solid #ccc;
+      padding-top: 1rem;
+    }
+    .day {
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>5-Day Weather Forecast (Announcer Style)</h1>
+  <label for="location">Enter City:</label>
+  <input type="text" id="location" placeholder="e.g., Sacramento CA" />
+  <button onclick="getForecast()">Get Forecast</button>
+
+  <div id="forecast"></div>
+
+  <script>
+    async function getForecast() {
+      const location = document.getElementById('location').value;
+      const forecastDiv = document.getElementById('forecast');
+      forecastDiv.innerHTML = 'Loading...';
+
+      try {
+        const res = await fetch(`http://localhost:3000/weather?location=${encodeURIComponent(location)}`);
+        const data = await res.json();
+
+        if (data.result) {
+          forecastDiv.innerHTML = '';
+          Object.entries(data.result).forEach(([day, text]) => {
+            const p = document.createElement('p');
+            p.className = 'day';
+            p.textContent = `${text}`;
+            forecastDiv.appendChild(p);
+          });
+        } else {
+          forecastDiv.innerHTML = 'Could not retrieve forecast.';
+        }
+      } catch (error) {
+        forecastDiv.innerHTML = 'Error fetching forecast.';
+        console.error(error);
+      }
+    }
+  </script>
+</body>
+</html>
