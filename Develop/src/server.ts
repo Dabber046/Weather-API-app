@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import axios from 'axios';
 import dotenv from 'dotenv';
 import cors from 'cors';
@@ -10,7 +10,7 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-app.get('/weather', async (req, res) => {
+app.get('/weather', async (req: Request, res: Response) => {
   const location = req.query.location as string;
   if (!location) {
     res.status(400).json({ error: 'Location is required' });
@@ -31,7 +31,7 @@ app.get('/weather', async (req, res) => {
       return generateAnnouncerStyle(i + 1, temp, weather);
     });
 
-    const result: any = {};
+    const result: Record<string, string> = {};
     commentary.forEach((text: string, idx: number) => {
       result[`day${idx + 1}`] = text;
     });
